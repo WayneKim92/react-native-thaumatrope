@@ -1,23 +1,13 @@
+
+https://github.com/user-attachments/assets/e1e351a4-ab3d-48ea-999e-3874b5e26d12
 # react-native-thaumatrope
 
 thaumatrope in react-native
 
-## Installation
-
-```sh
-npm install react-native-thaumatrope
-```
-
-## Usage
+## Just Fun!
 
 
-```js
-import { multiply } from 'react-native-thaumatrope';
-
-// ...
-
-const result = await multiply(3, 7);
-```
+https://github.com/user-attachments/assets/b2bf1d9e-cd5b-45bb-92ab-7c8c3f1b520b
 
 
 ## Contributing
