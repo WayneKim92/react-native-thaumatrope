@@ -1,4 +1,4 @@
-import { Button, StyleSheet, View } from 'react-native';
+import { Button, StyleSheet, Text, View } from 'react-native';
 import Animated, {
   useAnimatedStyle,
   useSharedValue,
@@ -29,7 +29,9 @@ export default function App() {
         withTiming(180, { duration: 50 }),
         withTiming(360, { duration: 50 }),
         withTiming(180, { duration: 18 }),
-        withTiming(360, { duration: 18 }),
+        withTiming(360, { duration: 18 }, () => {
+          speed.value = 18;
+        }),
         withRepeat(
           withSequence(
             withTiming(180, { duration: 18 }),
@@ -58,6 +60,13 @@ export default function App() {
     return {
       transform: [{ rotateY: `${degree.value}deg` }],
       opacity: degree.value >= 90 && degree.value <= 270 ? 1 : 0,
+    };
+  });
+
+  const textAnimation = useAnimatedStyle(() => {
+    console.log(speed.value);
+    return {
+      opacity: speed.value < 100 ? 1 : 0,
     };
   });
 
@@ -97,7 +106,14 @@ export default function App() {
           ]}
         />
       </Animated.View>
-      <Button onPress={handlePress} title="Click me" />
+      <Button
+        onPress={handlePress}
+        title={`${animation ? 'Stop' : 'Start'} Thaumatrope`}
+      />
+
+      <Animated.View style={textAnimation}>
+        <Text style={{ fontSize: 40 }}>Ta-da!</Text>
+      </Animated.View>
     </View>
   );
 }
