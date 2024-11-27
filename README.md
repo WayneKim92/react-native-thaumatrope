@@ -1,5 +1,3 @@
-
-https://github.com/user-attachments/assets/e1e351a4-ab3d-48ea-999e-3874b5e26d12
 # react-native-thaumatrope
 
 thaumatrope in react-native
