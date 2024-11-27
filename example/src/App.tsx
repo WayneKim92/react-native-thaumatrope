@@ -1,17 +1,103 @@
-import { useState, useEffect } from 'react';
-import { StyleSheet, View, Text } from 'react-native';
-import { multiply } from 'react-native-thaumatrope';
+import { Button, StyleSheet, View } from 'react-native';
+import Animated, {
+  useAnimatedStyle,
+  useSharedValue,
+  withRepeat,
+  withSequence,
+  withTiming,
+} from 'react-native-reanimated';
+import { useState } from 'react';
 
 export default function App() {
-  const [result, setResult] = useState<number | undefined>();
+  const degree = useSharedValue(0);
+  const speed = useSharedValue(500);
+  const [animation, setAnimation] = useState(false);
 
-  useEffect(() => {
-    multiply(3, 7).then(setResult);
-  }, []);
+  const handlePress = () => {
+    if (!animation) {
+      degree.value = withSequence(
+        withTiming(180, { duration: 500 }),
+        withTiming(360, { duration: 500 }),
+        withTiming(180, { duration: 400 }),
+        withTiming(360, { duration: 400 }),
+        withTiming(180, { duration: 300 }),
+        withTiming(360, { duration: 300 }),
+        withTiming(180, { duration: 200 }),
+        withTiming(360, { duration: 200 }),
+        withTiming(180, { duration: 100 }),
+        withTiming(360, { duration: 100 }),
+        withTiming(180, { duration: 50 }),
+        withTiming(360, { duration: 50 }),
+        withTiming(180, { duration: 18 }),
+        withTiming(360, { duration: 18 }),
+        withRepeat(
+          withSequence(
+            withTiming(180, { duration: 18 }),
+            withTiming(360, { duration: 18 })
+          ),
+          -1,
+          true
+        )
+      );
+    } else {
+      degree.value = 0;
+      speed.value = 500;
+    }
+
+    setAnimation(!animation);
+  };
+
+  const birdAnimation = useAnimatedStyle(() => {
+    return {
+      transform: [{ rotateY: `${degree.value}deg` }],
+      opacity: degree.value < 90 || degree.value > 270 ? 1 : 0,
+    };
+  });
+
+  const cageAnimation = useAnimatedStyle(() => {
+    return {
+      transform: [{ rotateY: `${degree.value}deg` }],
+      opacity: degree.value >= 90 && degree.value <= 270 ? 1 : 0,
+    };
+  });
 
   return (
     <View style={styles.container}>
-      <Text>Result: {result}</Text>
+      <Animated.View
+        style={{
+          justifyContent: 'center',
+          alignItems: 'center',
+        }}
+      >
+        <Animated.View
+          style={[
+            {
+              width: 300,
+              height: 300,
+              justifyContent: 'center',
+              alignItems: 'center',
+            },
+            birdAnimation,
+          ]}
+        >
+          <Animated.Image
+            source={require('../assets/bird.png')}
+            style={{ width: 80, height: 100, top: 40 }}
+          />
+        </Animated.View>
+        <Animated.Image
+          source={require('../assets/cage.png')}
+          style={[
+            {
+              width: 300,
+              height: 300,
+              position: 'absolute',
+            },
+            cageAnimation,
+          ]}
+        />
+      </Animated.View>
+      <Button onPress={handlePress} title="Click me" />
     </View>
   );
 }
@@ -22,9 +108,15 @@ const styles = StyleSheet.create({
     alignItems: 'center',
     justifyContent: 'center',
   },
-  box: {
-    width: 60,
-    height: 60,
-    marginVertical: 20,
+  imageContainer: {
+    position: 'absolute',
+    width: 300,
+    height: 300,
+    justifyContent: 'center',
+    alignItems: 'center',
+  },
+  image: {
+    width: 80,
+    height: 80,
   },
 });
